@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <title>Voice recorder</title>
+
+</head>
+<h2> Google Voice Recorder</h2>
+<p>
+    <button type="button" id="record" onclick="start()">Record</button>
+    <button type="button" onclick="stop()" id="stoprecord" disabled>Stop</button>
+</p>
+<p>
+    <audio id="recordedAudio" controls></audio>
+</p>
+
+<script>
+
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            rec = new MediaRecorder(stream);
+            rec.ondataavailable = e => {
+                audioChunks.push(e.data);
+                if (rec.state == "inactive") {
+                    let blob = new Blob(audioChunks, { type: 'audio/mp3' });
+                    recordedAudio.src = URL.createObjectURL(blob);
+                }
+            }
+        })
+
+    function start() {
+        record.disabled = true;
+        record.style.backgroundColor = "blue"
+        stoprecord.disabled = false;
+        audioChunks = [];
+        rec.start();
+    }
+    function stop() {
+        record.disabled = false;
+        rec.stop();
+
+    }
+
+
+</script>
+
+</html>
